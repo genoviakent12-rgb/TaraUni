@@ -1,5 +1,9 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+##########################
+# Frontend (Expo/React Native)
+##########################
+
 # dependencies
 node_modules/
 
@@ -7,7 +11,7 @@ node_modules/
 .expo/
 dist/
 web-build/
-expo-env.d.ts
+frontend/expo-env.d.ts
 
 # Native
 .kotlin/
@@ -26,18 +30,52 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
-.DS_Store
-*.pem
-
-# local env files
-.env*.local
-
 # typescript
 *.tsbuildinfo
 
-app-example
+frontend/app-example
 
-# generated native folders
-/ios
-/android
+# generated native folders (only inside frontend)
+frontend/ios
+frontend/android
+
+##########################
+# Backend (Java / Spring Boot / Maven)
+##########################
+
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+
+# Spring Boot
+backend/src/main/resources/application-local.properties
+backend/src/main/resources/application-secrets.properties
+
+##########################
+# Editors / IDEs
+##########################
+
+.vscode/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+##########################
+# OS files
+##########################
+
+.DS_Store
+Thumbs.db
+
+##########################
+# Env & secrets (both sides)
+##########################
+
+.env
+.env.local
+.env*.local
+*.pem
