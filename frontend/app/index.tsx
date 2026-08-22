@@ -1,15 +1,6 @@
-import { Text, View } from "react-native";
-
+import LandingPage from "../assets/components/pages/LandingPages/LandingPage";
+import Home from "./(tabs)/Home"
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Hello this is secureley</Text>
-    </View>
-  );
+  // return <LandingPage />;
+  return <Home />;
 }
