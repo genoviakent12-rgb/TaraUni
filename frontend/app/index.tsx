@@ -1,6 +1,8 @@
 import LandingPage from "../assets/components/pages/LandingPages/LandingPage";
-import Home from "./(tabs)/Home"
+import Home from "./(tabs)/Home";
+import { Redirect } from "expo-router";
+
 export default function Index() {
   // return <LandingPage />;
-  return <Home />;
+  return <Redirect href="/(tabs)/Home" />;
 }

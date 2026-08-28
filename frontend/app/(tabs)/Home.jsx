@@ -1,52 +1,157 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  Dimensions,
+} from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/theme";
-import SearchButton from "../../assets/components/pages/SearchPage/SearchButton";
-import CarpoolButton from "../../assets/components/pages/Services/CarpoolButton";
-import CreateCarpoolButton from "../../assets/components/pages/Services/CreateCarpoolButton";
-import TransportationButton from "../../assets/components/pages/Services/TransportationButton";
+
+import CarpoolButton from "@/assets/components/pages/Services/CarpoolButton";
+import CreateCarpoolButton from "@/assets/components/pages/Services/CreateCarpoolButton";
+import TransportationButton from "@/assets/components/pages/Services/TransportationButton";
+import RouteInputCard from "@/assets/components/pages/SearchPage/RouteInputCard";
+import useCurrentLocation from "@/assets/components/hooks/useCurrentLocation";
+import homeImageData from "@/assets/components/data/homeImageData";
+
 import { useRouter } from "expo-router";
+
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width - 60;
 
 export default function Home() {
   const router = useRouter();
 
+  const { location, loading, errorMsg } = useCurrentLocation();
+
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
+
+  const hasRoute = origin && destination;
+
+  const sections = [
+    {
+      id: "home",
+    },
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.upperContainer}>
-        <Text style={styles.title}>TaraUni</Text>
-      </View>
+      <FlatList
+        data={sections}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+        renderItem={() => null}
+        ListHeaderComponent={
+          <>
+            {/* HEADER */}
+            <View style={styles.upperContainer}>
+              <Text style={styles.title}>TaraUni</Text>
+            </View>
 
-      <View style={styles.searchContainer}>
-        <TouchableOpacity onPress={() => router.push("/routes/search")}>
-          <SearchButton />
-        </TouchableOpacity>
-      </View>
+            {/* ROUTE INPUT */}
+            <View style={styles.searchContainer}>
+              <RouteInputCard
+                location={location}
+                setOrigin={setOrigin}
+                setDestination={setDestination}
+              />
+            </View>
 
-      <Text style={styles.subHeader}>What now?</Text>
+            {/* SERVICES TITLE */}
+            <Text style={styles.subHeader}>What now?</Text>
 
-      <View style={styles.serviceContainer}>
-        {/* Carpool Screen */}
-        <TouchableOpacity onPress={() => router.push("/routes/carpool")}>
-          <CarpoolButton />
-        </TouchableOpacity>
+            {!hasRoute && (
+              <Text style={styles.description}>
+                Enter an origin and destination to use services.
+              </Text>
+            )}
 
-        {/* Create Carpool Screen */}
-        <TouchableOpacity onPress={() => router.push("/routes/createCarpool")}>
-          <CreateCarpoolButton />
-        </TouchableOpacity>
+            {/* SERVICE BUTTONS */}
+            <View style={styles.serviceContainer}>
+              {/* CARPOOL */}
+              <TouchableOpacity
+                disabled={!hasRoute}
+                onPress={() => {
+                  router.push({
+                    pathname: "/services/CarpoolScreen",
+                    params: {
+                      origin: JSON.stringify(origin),
+                      destination: JSON.stringify(destination),
+                    },
+                  });
+                }}
+              >
+                <CarpoolButton disabled={!hasRoute} />
+              </TouchableOpacity>
 
-        {/* Transportation Screen */}
-        <TouchableOpacity onPress={() => router.push("/routes/transportation")}>
-          <TransportationButton />
-        </TouchableOpacity>
-      </View>
+              {/* CREATE CARPOOL */}
+              <TouchableOpacity
+                disabled={!hasRoute}
+                onPress={() => {
+                  router.push({
+                    pathname: "/services/CreateCarpoolScreen",
+                    params: {
+                      origin: JSON.stringify(origin),
+                      destination: JSON.stringify(destination),
+                    },
+                  });
+                }}
+              >
+                <CreateCarpoolButton disabled={!hasRoute} />
+              </TouchableOpacity>
 
-      {/* extra information */}
-      <View style={styles.extraInfoContainer}>
-        <Text style={styles.extraInfoText}>Extra Information</Text>
-        <View style={styles.extraInfoButton}></View>
-      </View>
+              {/* TRANSPORTATION */}
+              <TouchableOpacity
+                disabled={!hasRoute}
+                onPress={() => {
+                  router.push({
+                    pathname: "/services/TransportationsScreen",
+                    params: {
+                      origin: JSON.stringify(origin),
+                      destination: JSON.stringify(destination),
+                    },
+                  });
+                }}
+              >
+                <TransportationButton disabled={!hasRoute} />
+              </TouchableOpacity>
+            </View>
+          </>
+        }
+        ListFooterComponent={
+          <>
+            {/* EXTRA INFORMATION */}
+            <View style={styles.extraInfoContainer}>
+              <FlatList
+                data={homeImageData}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={true}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <View style={styles.imageContainer}>
+                    <Image
+                      source={item.image}
+                      style={styles.homeImage}
+                      resizeMode="contain"
+                    />
+
+                    <View style={styles.textContainer}>
+                      <Text style={styles.imageText}>{item.text}</Text>
+                    </View>
+                  </View>
+                )}
+              />
+            </View>
+          </>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -54,7 +159,10 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.background,
+  },
+  scrollContainer: {
+    paddingBottom: 80,
   },
   title: {
     fontFamily: "fontExtraBold",
@@ -65,10 +173,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
   searchContainer: {
     justifyContent: "center",
-    paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   subHeader: {
     fontFamily: "fontBold",
@@ -77,27 +185,56 @@ const styles = StyleSheet.create({
     textAlign: "left",
     paddingLeft: 20,
   },
+  description: {
+    fontFamily: "fontRegular",
+    fontSize: 16,
+    lineHeight: 20,
+    marginTop: 10,
+    textAlign: "left",
+    paddingLeft: 20,
+    color: Colors.gray
+  },
   serviceContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 35,
     marginTop: 20,
   },
   extraInfoContainer: {
     marginTop: 25,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
   },
   extraInfoButton: {
     backgroundColor: Colors.button,
-    width: "100%", 
-    height: 100,
+    width: "100%",
+    height: 150,
     borderRadius: 20,
-    marginTop: 15,
   },
   extraInfoText: {
     alignSelf: "flex-start",
-    fontFamily: "ManropeBold",
+    fontFamily: "fontBold",
     fontSize: 23,
+  },
+  imageContainer: {
+    width: CARD_WIDTH,
+    height: 250,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -20,
+  },
+  homeImage: {
+    width: "100%",
+    height: 220,
+    alignSelf: "center",
+  },
+  textContainer: {
+    flex: 1,
+  },
+  imageText: {
+    fontFamily: "fontBold",
+    fontSize: 16,
+    lineHeight: 22,
+    marginTop: -10,
   },
 });

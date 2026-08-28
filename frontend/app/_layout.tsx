@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { View } from "react-native";
 import { Fonts } from "@/constants/theme";
+import "../global.css";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({

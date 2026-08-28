@@ -1,0 +1,51 @@
+1. Search Button 
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+<FontAwesome name="search" size={24} color="black" />
+
+2. Home
+import AntDesign from '@expo/vector-icons/AntDesign';
+<AntDesign name="home" size={24} color="black" />
+
+3. Services/Car
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+<FontAwesome6 name="car-side" size={24} color="black" />
+
+4. Profile
+import Ionicons from '@expo/vector-icons/Ionicons';
+<Ionicons name="person" size={24} color="black" />
+
+4.1 Profile Outline
+import Ionicons from '@expo/vector-icons/Ionicons';
+<Ionicons name="person-outline" size={24} color="black" />
+
+5. Back 
+import Feather from '@expo/vector-icons/Feather';
+<Feather name="arrow-left" size={24} color="black" />
+
+6. Next
+import Feather from '@expo/vector-icons/Feather';
+<Feather name="arrow-right" size={24} color="black" />
+
+6.1 Next black border
+import Ionicons from '@expo/vector-icons/Ionicons';
+<Ionicons name="arrow-forward-circle" size={24} color="black" />
+
+6.2 Next small arrow
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+<MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+
+7. Location - arrow
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+<FontAwesome5 name="location-arrow" size={24} color="black" />
+
+7.1 Location - pinpoint
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+<FontAwesome6 name="location-dot" size={24} color="black" />
+
+8. Money
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+<FontAwesome5 name="money-bill-wave" size={24} color="black" />
+
+9. Time
+import Ionicons from '@expo/vector-icons/Ionicons';
+<Ionicons name="time-outline" size={24} color="black" />
