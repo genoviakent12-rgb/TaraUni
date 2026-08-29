@@ -1,6 +1,7 @@
 import { View, Text } from "react-native";
 import React, { useMemo, useState } from "react";
 import MapContent from "../../../assets/components/pages/navigation/MapContent";
+import RouteChat from "../../../assets/components/pages/navigation/RouteChat";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/theme";
@@ -13,21 +14,19 @@ export default function Transportations() {
 
   const originData = useMemo(
     () => (origin ? JSON.parse(origin) : null),
-    [origin],
+    [origin]
   );
   const destinationData = useMemo(
     () => (destination ? JSON.parse(destination) : null),
-    [destination],
+    [destination]
   );
 
   return (
-    <SafeAreaView
-      className="flex-1"
-      style={{ backgroundColor: Colors.background }}
-    >
+    <SafeAreaView className="flex-1" style={{ backgroundColor: Colors.background }}>
       <Text className="text-lg font-bold items-center text-center mt-5 text-[26px]">
         Transportations
       </Text>
+
       <View className="mx-5 mt-3 rounded-2xl overflow-hidden shadow-sm">
         <View className="mx-5 mt-5">
           <View
@@ -46,11 +45,7 @@ export default function Transportations() {
                 className="w-9 h-9 rounded-full items-center justify-center"
                 style={{ backgroundColor: `${Colors.button}20` }}
               >
-                <FontAwesome6
-                  name="location-dot"
-                  size={16}
-                  color={Colors.button}
-                />
+                <FontAwesome6 name="location-dot" size={16} color={Colors.button} />
               </View>
               <View className="ml-4 flex-1">
                 <Text className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
@@ -64,13 +59,7 @@ export default function Transportations() {
 
             {/* Connector line */}
             <View className="ml-[17px] my-1">
-              <View
-                style={{
-                  width: 2,
-                  height: 24,
-                  backgroundColor: "#E5E7EB",
-                }}
-              />
+              <View style={{ width: 2, height: 24, backgroundColor: "#E5E7EB" }} />
             </View>
 
             {/* Destination */}
@@ -79,11 +68,7 @@ export default function Transportations() {
                 className="w-9 h-9 rounded-full items-center justify-center"
                 style={{ backgroundColor: `${Colors.button}20` }}
               >
-                <FontAwesome5
-                  name="location-arrow"
-                  size={14}
-                  color={Colors.button}
-                />
+                <FontAwesome5 name="location-arrow" size={14} color={Colors.button} />
               </View>
               <View className="ml-4 flex-1">
                 <Text className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
@@ -97,6 +82,8 @@ export default function Transportations() {
           </View>
         </View>
       </View>
+
+      <RouteChat originData={originData} destinationData={destinationData} />
     </SafeAreaView>
   );
 }
