@@ -5,7 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function CarpoolsCreatedCard() {
+
+export default function CarpoolsCreatedCard() { 
   return (
     <SafeAreaView className="flex-1">
       <View

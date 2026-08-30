@@ -1,39 +1,40 @@
 package com.lockbox.backend.model;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="users")
-public class User {
-
+@Table(name = "carpools")
+public class Carpools {
+  
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id; 
-  private String firstName;
-  private String lastName;
-  private String email;
 
-  @ElementCollection 
-  @CollectionTable( 
-    name = "user_emails", 
-    joinColumns = @JoinColumn(name = "user_id")
-  )
-  private List<String> emails;
+  private LocalTime time;
+  private LocalDate date; 
+  private Integer passengers; 
+  private Integer maxPassenger;
+  private String status; 
+  private String origin;
+  private String destination;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 }

@@ -7,7 +7,10 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
+  Alert,
+  StyleSheet
 } from "react-native";
+
 import MapContent from "../../../assets/components/pages/navigation/MapContent";
 import { Colors } from "@/constants/theme";
 import { useState, useMemo } from "react";
@@ -16,7 +19,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Calendar } from "react-native-calendars";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
+import { createCarpool, joinCarpool, removeCarpool } from "../../../assets/components/hooks/CarpoolService";
 export default function CreateCarpool() {
   const { origin, destination } = useLocalSearchParams();
   const router = useRouter();
@@ -33,11 +36,12 @@ export default function CreateCarpool() {
 
   const today = new global.Date().toISOString().split("T")[0];
   const [routeInfo, setRouteInfo] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   const [selectedPassengers, setSelectedPassengers] = useState(1);
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedTime, setSelectedTime] = useState(new Date());
+  const [selectedMaxPassengers, setSelectedMaxPassengers] = useState(1);
 
   const [showPassengerSheet, setShowPassengerSheet] = useState(false);
   const [showPriceSheet, setShowPriceSheet] = useState(false);
@@ -67,6 +71,59 @@ export default function CreateCarpool() {
       setSelectedPrice(selectedPrice - 1);
     }
   };
+
+  const handleCreateCarpool = async () => { 
+    if ( 
+      !selectedPassengers || 
+      !selectedDate || 
+      !selectedTime || 
+      !selectedPrice 
+    ) { 
+      Alert.alert("Missing Information", "Please fill in all required fields.")
+      return; 
+    }
+
+    try {   
+      setLoading(true);
+      
+      const carpool = { 
+        passengers: 0, 
+        maxPassengers: selectedMaxPassengers,
+        price: selectedPrice,
+        date: selectedDate,
+        time: selectedTime.toTimeString().slice(0, 8),
+        status: "Open", 
+        origin: originData?.name || "Current Location", 
+        destination: destination?.name || "Destination",
+
+        user: {
+          id: 1,
+        },
+      };
+
+      const createdCarpool = await createCarpool(carpool);
+
+      console.log("Carpool Created Successfully!",
+        createdCarpool
+      );
+
+      Alert.alert( 
+        "Success", 
+        "You have successfully created a carpool!",
+        [
+          { 
+            text: "OK",
+            onPress: () => router.back()
+          }
+        ]
+      )
+    } catch (e) { 
+      console.log("Failed to create carpool", e);
+      Alert.alert("Failed to create carpool", "Please try again later.");
+    } finally { 
+      setLoading(false); 
+    }
+  }
 
   return (
     <SafeAreaView
@@ -237,9 +294,16 @@ export default function CreateCarpool() {
         <View className="items-center">
           <TouchableOpacity
             className="bg-blue-500 text-white py-5 px-[140px] rounded-[16px] mt-5"
-            onPress={() => setConfirmParty(true)}
+            onPress={() => {
+              setConfirmParty(true); 
+              handleCreateCarpool();
+            }}
+            disabled={loading}
           >
-            <Text className="font-bold color-white">Create Party</Text>
+            <Text 
+            className="font-bold color-white"
+            style={styles.createParty}
+            >{loading ? "Creating..." : "Create Party"}</Text>
           </TouchableOpacity>
         </View>
 
@@ -474,3 +538,12 @@ export default function CreateCarpool() {
   }}
 /> */
 }
+
+
+const styles = StyleSheet.create({ 
+  fontFamily: "fontMedium",
+    fontSize: 15,
+    color: Colors.WHITE,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+})

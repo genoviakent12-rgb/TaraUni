@@ -18,7 +18,7 @@ export default function Carpool() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.replace("/(tabs)/Home")}>
-          <Feather name="arrow-left" size={24} color="black" />
+          <Feather name="arrow-left" size={24} color={Colors.button} />
         </TouchableOpacity>
         <Text style={styles.headerText}>All Carpools</Text>
         <View style={styles.headerRight} />

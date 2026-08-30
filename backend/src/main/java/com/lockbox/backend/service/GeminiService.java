@@ -26,7 +26,7 @@ public class GeminiService {
 
     public Mono<String> getChatReply(String userMessage, String origin, String destination) {
         String prompt = String.format(
-            "You are a helpful transportation assistant. Context: traveling from %s to %s.\n\nUser: %s",
+            "You are a helpful transportation assistant. Context: traveling from %s to %s.\n\nUser: %s in the country UAE.",
             origin, destination, userMessage
         );
 

@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Tabs } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import { Colors } from "../../constants/theme";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -8,39 +8,45 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Layout() {
+  const pathname = usePathname();
+
+  const hideTabBar = pathname.includes("TransportationsScreen");
+
+  const baseTabBarStyle = {
+    position: "absolute",
+    left: 16,
+    right: 16,
+    bottom: 20,
+    marginLeft: 25,
+    marginBottom: 25,
+    height: 60,
+    width: 350,
+    borderRadius: 99,
+    backgroundColor: Colors.whiteText,
+    borderWidth: 0.2,
+    borderColor: Colors.gray,
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+  };
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: true,
-
         tabBarActiveTintColor: Colors.button,
         tabBarInactiveTintColor: Colors.gray,
         tabBarInactiveBackgroundColor: "transparent",
 
-        tabBarStyle: {
-          position: "absolute",
-          left: 16,
-          right: 16,
-          bottom: 20,
-          marginLeft: 25,
-          marginBottom: 25,
-          height: 60,
-          width: 350,
-          borderRadius: 99,
-          backgroundColor: Colors.whiteText,
-          borderWidth: 0.2,
-          borderColor:  Colors.gray,
-          elevation: 1,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 6,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          // overflow: "hidden",
-        },
+        tabBarStyle: hideTabBar
+          ? { display: "none" }
+          : baseTabBarStyle,
 
         tabBarItemStyle: {
           justifyContent: "center",
@@ -53,7 +59,7 @@ export default function Layout() {
           marginBottom: 0,
         },
 
-        tabBarLabelStyle: { 
+        tabBarLabelStyle: {
           fontFamily: "fontBold",
           fontSize: 12,
           marginTop: 2.5,
@@ -63,7 +69,7 @@ export default function Layout() {
       <Tabs.Screen
         name="Home"
         options={{
-          title:"Home",
+          title: "Home",
           tabBarIcon: ({ color }) => (
             <AntDesign name="home" size={24} color={color} />
           ),
@@ -73,7 +79,7 @@ export default function Layout() {
       <Tabs.Screen
         name="services"
         options={{
-          title:"Services",
+          title: "Services",
           tabBarIcon: ({ color }) => (
             <FontAwesome6 name="car-side" size={24} color={color} />
           ),
@@ -83,7 +89,7 @@ export default function Layout() {
       <Tabs.Screen
         name="Profile"
         options={{
-          title:"Profile",  
+          title: "Profile",
           tabBarIcon: ({ color }) => (
             <Ionicons name="person" size={24} color={color} />
           ),

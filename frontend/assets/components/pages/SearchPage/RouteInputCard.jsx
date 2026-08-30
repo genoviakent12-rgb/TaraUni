@@ -29,6 +29,7 @@ export default function RouteInputCard({
   const originText = origin?.name || "";
   const destinationText = destination?.name || "";
 
+  //sets the interval of when to show the placeholder texts
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % ORIGIN_PLACEHOLDER.length);

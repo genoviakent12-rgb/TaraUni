@@ -25,7 +25,7 @@ const CARD_WIDTH = width - 60;
 
 export default function Home() {
   const router = useRouter();
-
+  const [activeIndex, setActiveIndex] = useState(0);
   const { location, loading, errorMsg } = useCurrentLocation();
 
   const [origin, setOrigin] = useState(null);
@@ -39,6 +39,11 @@ export default function Home() {
     },
   ];
 
+  const handleScroll = (event) => {
+    const index = Math.round(event.nativeEvent.contentOffset.x / width);
+    setActiveIndex(index);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -51,7 +56,7 @@ export default function Home() {
           <>
             {/* HEADER */}
             <View style={styles.upperContainer}>
-              <Text style={styles.title}>TaraUni</Text>
+              <Text style={styles.title}>Tara</Text>
             </View>
 
             {/* ROUTE INPUT */}
@@ -126,13 +131,15 @@ export default function Home() {
         }
         ListFooterComponent={
           <>
+            <Text style={styles.subHeader}>What do we offer?</Text>
             {/* EXTRA INFORMATION */}
             <View style={styles.extraInfoContainer}>
               <FlatList
                 data={homeImageData}
                 horizontal
                 pagingEnabled
-                showsHorizontalScrollIndicator={true}
+                showsHorizontalScrollIndicator={false}
+                onScroll={handleScroll}
                 keyExtractor={(_, index) => index.toString()}
                 renderItem={({ item }) => (
                   <View style={styles.imageContainer}>
@@ -149,13 +156,27 @@ export default function Home() {
                 )}
               />
             </View>
+
+            <View className="flex-row justify-content self-center ">
+              {homeImageData.map((_, index) => (
+                <View
+                  key={index}
+                  style={{
+                    width: activeIndex === index ? 18 : 8,
+                    height: 8,
+                    borderRadius: 4, 
+                    marginHorizontal: 4, 
+                    backgroundColor: activeIndex === index ? "#333" : "#ccc",
+                  }}
+                />
+              ))}
+            </View>
           </>
         }
       />
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -221,7 +242,7 @@ const styles = StyleSheet.create({
     height: 250,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -20,
+    marginTop: -30,
   },
   homeImage: {
     width: "100%",
@@ -234,7 +255,6 @@ const styles = StyleSheet.create({
   imageText: {
     fontFamily: "fontBold",
     fontSize: 16,
-    lineHeight: 22,
     marginTop: -10,
   },
 });
