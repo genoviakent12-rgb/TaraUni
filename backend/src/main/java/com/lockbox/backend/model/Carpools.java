@@ -31,6 +31,7 @@ public class Carpools {
   private LocalDate date; 
   private Integer passengers; 
   private Integer maxPassenger;
+  private Integer price;
   private String status; 
   private String origin;
   private String destination;

@@ -88,13 +88,13 @@ export default function CreateCarpool() {
       
       const carpool = { 
         passengers: 0, 
-        maxPassengers: selectedMaxPassengers,
+        maxPassenger: selectedPassengers,
         price: selectedPrice,
         date: selectedDate,
         time: selectedTime.toTimeString().slice(0, 8),
         status: "Open", 
         origin: originData?.name || "Current Location", 
-        destination: destination?.name || "Destination",
+        destination: destinationData?.name || "Destination",
 
         user: {
           id: 1,
@@ -293,16 +293,11 @@ export default function CreateCarpool() {
         {/* Create party button */}
         <View className="items-center">
           <TouchableOpacity
-            className="bg-blue-500 text-white py-5 px-[140px] rounded-[16px] mt-5"
-            onPress={() => {
-              setConfirmParty(true); 
-              handleCreateCarpool();
-            }}
+            className="bg-blue-500 py-5 px-[140px] rounded-[16px] mt-5 text-white"
+            onPress={handleCreateCarpool}
             disabled={loading}
           >
-            <Text 
-            className="font-bold color-white"
-            style={styles.createParty}
+            <Text className="text-white font-bold"
             >{loading ? "Creating..." : "Create Party"}</Text>
           </TouchableOpacity>
         </View>
@@ -541,9 +536,14 @@ export default function CreateCarpool() {
 
 
 const styles = StyleSheet.create({ 
-  fontFamily: "fontMedium",
+  createParty: {
+    fontFamily: "fontMedium",
     fontSize: 15,
     color: Colors.WHITE,
     letterSpacing: 1.5,
     textTransform: "uppercase",
+    width: 10,
+    height: 20,
+  }
+  
 })
