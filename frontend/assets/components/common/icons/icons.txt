@@ -49,3 +49,15 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 9. Time
 import Ionicons from '@expo/vector-icons/Ionicons';
 <Ionicons name="time-outline" size={24} color="black" />
+
+10. Lock
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+<MaterialIcons name="lock-outline" size={24} color="black" />
+
+11. Eye
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+<FontAwesome6 name="eye" size={24} color="black" />
+
+12.Email
+import Fontisto from '@expo/vector-icons/Fontisto';
+<Fontisto name="email" size={24} color="black" />
