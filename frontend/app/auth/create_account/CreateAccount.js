@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React from "react";
 import { useState } from "react";
@@ -15,15 +16,18 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Fontisto from "@expo/vector-icons/Fontisto";
-
+import { createAccount } from "../../../assets/components/hooks/CreateAccountService";
 import { useRouter } from "expo-router";
 
 export default function CreateAccount() {
   const router = useRouter();
-  const [fullname, setFullname] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   //animation from bottom to top
   const slideAnim = React.useRef(new Animated.Value(500)).current;
 
@@ -35,6 +39,36 @@ export default function CreateAccount() {
     }).start();
   }, [slideAnim]);
 
+  const handleCreateAccount = async () => {
+    setError("");
+    setLoading(true);
+    
+    try {
+      const result = await createAccount(fullname, email, password);
+
+      if (!result.success) {
+        setError(result.message);
+        return;
+      }
+
+      console.log("Success:", result.user);
+      Alert.alert( 
+        "Success!",
+        "Your account has been created successfully.",
+        [
+          { 
+            text: "Ok",
+            onPress: () => router.push("/auth/signin/signin")
+          }
+        ]
+      )
+    } catch (e) {
+      console.log("Creation of account error: ", e);
+      setError("An error occurred while creating the account.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <View className="flex-1 w-full">
       {/* background */}
@@ -46,7 +80,7 @@ export default function CreateAccount() {
         {/* logo */}
         <Image
           source={require("../../../assets/images/Logo/White_Transparent.png")}
-          className="w-48 h-48 -mt-[450px]"
+          className="w-48 h-48 -mt-[400px]"
           resizeMode="contain"
         />
         <Text className="text-white text-4xl font-bold">Tara Uni</Text>
@@ -74,6 +108,7 @@ export default function CreateAccount() {
               placeholder="Full Name"
               placeholderTextColor={Colors.gray}
               className="flex-1 text-black"
+              autoCapitalize="none"
             />
           </View>
 
@@ -86,6 +121,7 @@ export default function CreateAccount() {
               placeholder="Email"
               placeholderTextColor={Colors.gray}
               className="flex-1 text-black"
+              autoCapitalize="none"
             />
           </View>
 
@@ -114,12 +150,19 @@ export default function CreateAccount() {
           </View>
 
           {/* log in button */}
+          {error ? (
+            <Text className="text-red-500 text-center mb-2">{error}</Text>
+          ) : null}
           <View className="self-center justify-center m-5 w-full">
             <TouchableOpacity
               activeOpacity={0.8}
               className="bg-blue-500 w-full justify-center items-center py-4 rounded-xl"
+              onPress={handleCreateAccount}
+              disabled={loading}
             >
-              <Text className="text-white font-bold text-center">Create Account</Text>
+              <Text className="text-white font-bold text-center">
+                {loading ? "Creating account..." : "Create Account"}
+              </Text>
             </TouchableOpacity>
           </View>
 

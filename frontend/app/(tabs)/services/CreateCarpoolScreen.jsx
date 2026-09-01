@@ -8,9 +8,9 @@ import {
   Modal,
   Pressable,
   Alert,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
-
+import Feather from "@expo/vector-icons/Feather";
 import MapContent from "../../../assets/components/pages/navigation/MapContent";
 import { Colors } from "@/constants/theme";
 import { useState, useMemo } from "react";
@@ -19,8 +19,16 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Calendar } from "react-native-calendars";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { createCarpool, joinCarpool, removeCarpool } from "../../../assets/components/hooks/CarpoolService";
+import { useAuth } from "@/context/AuthContext";
+import {
+  createCarpool,
+  joinCarpool,
+  removeCarpool,
+} from "../../../assets/components/hooks/CarpoolService";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 export default function CreateCarpool() {
+  const { user } = useAuth();
   const { origin, destination } = useLocalSearchParams();
   const router = useRouter();
 
@@ -28,7 +36,7 @@ export default function CreateCarpool() {
     () => (origin ? JSON.parse(origin) : null),
     [origin],
   );
-  
+
   const destinationData = useMemo(
     () => (destination ? JSON.parse(destination) : null),
     [destination],
@@ -72,58 +80,55 @@ export default function CreateCarpool() {
     }
   };
 
-  const handleCreateCarpool = async () => { 
-    if ( 
-      !selectedPassengers || 
-      !selectedDate || 
-      !selectedTime || 
-      !selectedPrice 
-    ) { 
-      Alert.alert("Missing Information", "Please fill in all required fields.")
-      return; 
+  const handleCreateCarpool = async () => {
+    if (!user?.id) {
+      Alert.alert("Sign In Required", "Please sign in to create a carpool.");
+      return;
+    }
+    if (
+      !selectedPassengers ||
+      !selectedDate ||
+      !selectedTime ||
+      !selectedPrice
+    ) {
+      Alert.alert("Missing Information", "Please fill in all required fields.");
+      return;
     }
 
-    try {   
+    try {
       setLoading(true);
-      
-      const carpool = { 
-        passengers: 0, 
+
+      const carpool = {
+        user: {
+          id: user?.id,
+        },
+        passengers: 0,
         maxPassenger: selectedPassengers,
         price: selectedPrice,
         date: selectedDate,
         time: selectedTime.toTimeString().slice(0, 8),
-        status: "Open", 
-        origin: originData?.name || "Current Location", 
+        status: "Open",
+        origin: originData?.name || "Current Location",
         destination: destinationData?.name || "Destination",
-
-        user: {
-          id: 1,
-        },
       };
 
       const createdCarpool = await createCarpool(carpool);
 
-      console.log("Carpool Created Successfully!",
-        createdCarpool
-      );
+      console.log("Carpool Created Successfully!", createdCarpool);
 
-      Alert.alert( 
-        "Success", 
-        "You have successfully created a carpool!",
-        [
-          { 
-            text: "OK",
-            onPress: () => router.back()
-          }
-        ]
-      )
-    } catch (e) { 
+      Alert.alert("Success", "You have successfully created a carpool!", [
+        {
+          text: "OK",
+          onPress: () => router.back(),
+        },
+      ]);
+    } catch (e) {
       console.log("Failed to create carpool", e);
       Alert.alert("Failed to create carpool", "Please try again later.");
-    } finally { 
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <SafeAreaView
@@ -131,14 +136,19 @@ export default function CreateCarpool() {
       style={{ backgroundColor: Colors.background }}
     >
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        <View>
-          <Text className="text-lg font-bold items-center text-center mt-5 text-[26px]">
+        <View className="flex-row items-center mt-2 justify-between">
+          <TouchableOpacity onPress={() => router.replace("/(tabs)/Home")}>
+            <Feather name="arrow-left" size={24} color={Colors.button} className="ml-4"/>
+          </TouchableOpacity>
+          <Text 
+          pointerEvents="none"
+          className=" absolute left-0 right-0 text-2xl font-bold text-center ">
             Carpool Party
           </Text>
-          <Text className="text-base color-gray-400 text-center mb-5 text-[14px]">
-            Review your carpool details before creating the ride.
-          </Text>
         </View>
+        <Text className="text-base color-gray-400 text-center mb-5 text-[14px]">
+          Review your carpool details before creating the ride.
+        </Text>
         <View className="mx-5 mt-3 rounded-2xl overflow-hidden shadow-sm">
           <MapContent
             origin={originData}
@@ -146,16 +156,13 @@ export default function CreateCarpool() {
             setRouteInfo={setRouteInfo}
           />
         </View>
-
-        <Text className="text-lg font-bold text-left mt-5 text-[26px] text-center">
-          Hey, John Doe!
-        </Text>
-
-        <Text className="text-lg font-medium text-left text-[13.5px] text-center color-gray-400">
+        {/* <Text 
+        style={{color: Colors.button}}
+        className="text-xl font-bold text-left mt-5 text-center">
           Ready to create a party?
-        </Text>
+        </Text> */}
 
-        <Text className="text-lg font-bold text-left mt-5 ml-5 text-[26px]">
+        <Text className="font-bold text-left mt-5 ml-5 text-lg">
           Location Details
         </Text>
 
@@ -248,44 +255,117 @@ export default function CreateCarpool() {
           </View>
         </View>
 
-        {/* Amount of Passengers */}
-        <View className="flex-row justify-between items-center mx-5 mt-8 mb-4">
-          <Text className="text-lg font-bold text-left text-[26px]">
-            Amount of Passengers
-          </Text>
-          <TouchableOpacity onPress={() => setShowPassengerSheet(true)}>
+        {/* Trip Details */}
+        <View
+          className="mx-5 mt-8 rounded-2xl bg-white overflow-hidden"
+          style={{
+            shadowColor: "#000",
+            shadowOpacity: 0.05,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 2 },
+            elevation: 1,
+          }}
+        >
+          {/* Amount of Passengers */}
+          <TouchableOpacity
+            onPress={() => setShowPassengerSheet(true)}
+            activeOpacity={0.6}
+            className="flex-row items-center justify-between px-5 py-4"
+            style={{ borderBottomWidth: 1, borderBottomColor: "#F0F0F0" }}
+          >
+            <View className="flex-row items-center flex-1">
+              <View
+                className="w-9 h-9 rounded-full items-center justify-center mr-3"
+                style={{ backgroundColor: `${Colors.button}18` }}
+              >
+                <Ionicons
+                  name="people-outline"
+                  size={18}
+                  color={Colors.button}
+                />
+              </View>
+              <View className="flex-1">
+                <Text
+                  className="text-base font-semibold"
+                  style={{ color: Colors.text }}
+                >
+                  Amount of Passengers
+                </Text>
+                <Text className="text-xs mt-0.5" style={{ color: Colors.gray }}>
+                  {selectedPassengers}{" "}
+                  {selectedPassengers === 1 ? "passenger" : "passengers"}
+                </Text>
+              </View>
+            </View>
             <MaterialIcons
               name="keyboard-arrow-right"
-              size={26}
-              color="black"
+              size={22}
+              color={Colors.gray}
             />
           </TouchableOpacity>
-        </View>
 
-        {/* Price per person */}
-        <View className="flex-row justify-between items-center mx-5 mt-5 mb-4">
-          <Text className="text-lg font-bold text-left text-[26px]">
-            Price per Person
-          </Text>
-          <TouchableOpacity onPress={() => setShowPriceSheet(true)}>
+          {/* Price per Person */}
+          <TouchableOpacity
+            onPress={() => setShowPriceSheet(true)}
+            activeOpacity={0.6}
+            className="flex-row items-center justify-between px-5 py-4"
+            style={{ borderBottomWidth: 1, borderBottomColor: "#F0F0F0" }}
+          >
+            <View className="flex-row items-center flex-1">
+              <View
+                className="w-9 h-9 rounded-full items-center justify-center mr-3"
+                style={{ backgroundColor: `${Colors.button}18` }}
+              >
+                <Ionicons name="cash-outline" size={18} color={Colors.button} />
+              </View>
+              <View className="flex-1">
+                <Text
+                  className="text-base font-semibold"
+                  style={{ color: Colors.text }}
+                >
+                  Price per Person
+                </Text>
+                <Text className="text-xs mt-0.5" style={{ color: Colors.gray }}>
+                  AED {selectedPrice}
+                </Text>
+              </View>
+            </View>
             <MaterialIcons
               name="keyboard-arrow-right"
-              size={26}
-              color="black"
+              size={22}
+              color={Colors.gray}
             />
           </TouchableOpacity>
-        </View>
 
-        {/* Time and Date */}
-        <View className="flex-row justify-between items-center mx-5 mt-5 mb-4">
-          <Text className="text-lg font-bold text-left text-[26px]">
-            Time and Date
-          </Text>
-          <TouchableOpacity onPress={() => setShowTimeAndDateSheet(true)}>
+          {/* Time and Date */}
+          <TouchableOpacity
+            onPress={() => setShowTimeAndDateSheet(true)}
+            activeOpacity={0.6}
+            className="flex-row items-center justify-between px-5 py-4"
+          >
+            <View className="flex-row items-center flex-1">
+              <View
+                className="w-9 h-9 rounded-full items-center justify-center mr-3"
+                style={{ backgroundColor: `${Colors.button}18` }}
+              >
+                <Ionicons name="time-outline" size={18} color={Colors.button} />
+              </View>
+              <View className="flex-1">
+                <Text
+                  className="text-base font-semibold"
+                  style={{ color: Colors.text }}
+                >
+                  Time and Date
+                </Text>
+                <Text className="text-xs mt-0.5" style={{ color: Colors.gray }}>
+                  {selectedDate} · {selectedTime.toTimeString().slice(0, 5)}
+                </Text>
+              </View>
+            </View>
             <MaterialIcons
               name="keyboard-arrow-right"
-              size={26}
-              color="black"
+              size={22}
+              color={Colors.gray}
             />
           </TouchableOpacity>
         </View>
@@ -297,8 +377,9 @@ export default function CreateCarpool() {
             onPress={handleCreateCarpool}
             disabled={loading}
           >
-            <Text className="text-white font-bold"
-            >{loading ? "Creating..." : "Create Party"}</Text>
+            <Text className="text-white font-bold">
+              {loading ? "Creating..." : "Create Party"}
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -484,24 +565,23 @@ export default function CreateCarpool() {
                     Time of Travel
                   </Text>
 
-                    <View className="items-center mt-5">
-                      <DateTimePicker
-                    value={selectedTime}
-                    mode="time"
-                    display="spinner"
-                    onChange={(event, date) => {
-                      if (date) {
-                        setSelectedTime(date);
-                      }
-                    }}
-                    style={{
-                      width: 100,
-                      height: 200,
-                    }}
-                  />
-                    </View>
-                
-                  
+                  <View className="items-center mt-5">
+                    <DateTimePicker
+                      value={selectedTime}
+                      mode="time"
+                      display="spinner"
+                      onChange={(event, date) => {
+                        if (date) {
+                          setSelectedTime(date);
+                        }
+                      }}
+                      style={{
+                        width: 100,
+                        height: 200,
+                      }}
+                    />
+                  </View>
+
                   <TouchableOpacity
                     className="mt-8 py-4 rounded-xl items-center"
                     style={{
@@ -533,17 +613,3 @@ export default function CreateCarpool() {
   }}
 /> */
 }
-
-
-const styles = StyleSheet.create({ 
-  createParty: {
-    fontFamily: "fontMedium",
-    fontSize: 15,
-    color: Colors.WHITE,
-    letterSpacing: 1.5,
-    textTransform: "uppercase",
-    width: 10,
-    height: 20,
-  }
-  
-})

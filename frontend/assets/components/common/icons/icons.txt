@@ -61,3 +61,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 12.Email
 import Fontisto from '@expo/vector-icons/Fontisto';
 <Fontisto name="email" size={24} color="black" />
+
+13. Notifications
+import Ionicons from '@expo/vector-icons/Ionicons';
+<Ionicons name="notifications-outline" size={24} color="black" />

@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { View } from "react-native";
 import { Fonts } from "@/constants/theme";
 import "../global.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -25,11 +26,13 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
+    <AuthProvider>
+      <Stack
       screenOptions={{
         headerShown: false,
         animation: "fade",
       }}
     />
+    </AuthProvider>
   );
 }

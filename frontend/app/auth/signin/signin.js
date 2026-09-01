@@ -16,11 +16,17 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { useRouter } from "expo-router";
 
+import {signIn} from "../../../assets/components/hooks/SignInService";
+import {useAuth} from "@/context/AuthContext";
+
 export default function SignIn() {
+  const { loginUser } = useAuth();
   const router = useRouter(); 
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   //animation from bottom to top
   const slideAnim = React.useRef(new Animated.Value(500)).current;
 
@@ -31,6 +37,27 @@ export default function SignIn() {
       useNativeDriver: true,
     }).start();
   }, [slideAnim]);
+
+  const handleSignIn = async () => {
+  // 1. Reset error state and start loading
+  setError(null);
+  setLoading(true);
+
+  // 2. Call the backend API helper
+  const result = await signIn(email, password);
+
+  setLoading(false);
+
+  if (result.success) {
+    // 3. save the current user globally and to storage
+    await loginUser(result.user);
+    // 4. Navigate to main app screen (e.g., home or tabs dashboard)
+    router.replace("/(tabs)/Home"); 
+  } else {
+    // 5. Set error message to display on the screen
+    setError(result.message);
+  }
+};
 
   return (
     <View className="flex-1 w-full">
@@ -69,6 +96,7 @@ export default function SignIn() {
               placeholder="Email"
               placeholderTextColor={Colors.gray}
               className="flex-1 text-black"
+              autoCapitalize="none"
             />
           </View>
 
@@ -82,6 +110,7 @@ export default function SignIn() {
               placeholder="Password"
               placeholderTextColor={Colors.gray}
               className="flex-1 text-black"
+              autoCapitalize="none"
             />
             <TouchableOpacity
               onPress={() => {
@@ -101,8 +130,9 @@ export default function SignIn() {
             <TouchableOpacity
               activeOpacity={0.8}
               className="bg-blue-500 w-full justify-center items-center py-4 rounded-xl"
+              onPress={handleSignIn}
             >
-              <Text className="text-white font-bold text-center">Log in</Text>
+              <Text className="text-white font-bold text-center">{loading ? "Logging in..." : "Log in"}</Text>
             </TouchableOpacity>
           </View>
 

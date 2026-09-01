@@ -1,19 +1,15 @@
 package com.lockbox.backend.model;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @Entity
 @Setter
@@ -29,11 +25,5 @@ public class User {
   private String firstName;
   private String lastName;
   private String email;
-
-  @ElementCollection 
-  @CollectionTable( 
-    name = "user_emails", 
-    joinColumns = @JoinColumn(name = "user_id")
-  )
-  private List<String> emails;
+  private String password;
 }

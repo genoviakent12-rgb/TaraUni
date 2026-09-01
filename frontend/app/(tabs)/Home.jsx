@@ -10,20 +10,22 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/theme";
-
 import CarpoolButton from "@/assets/components/pages/Services/CarpoolButton";
 import CreateCarpoolButton from "@/assets/components/pages/Services/CreateCarpoolButton";
 import TransportationButton from "@/assets/components/pages/Services/TransportationButton";
 import RouteInputCard from "@/assets/components/pages/SearchPage/RouteInputCard";
 import useCurrentLocation from "@/assets/components/hooks/useCurrentLocation";
 import homeImageData from "@/assets/components/data/homeImageData";
-
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from "expo-router";
+import {useAuth} from "@/context/AuthContext";
+
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width - 60;
 
 export default function Home() {
+  const { user } = useAuth();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const { location, loading, errorMsg } = useCurrentLocation();
@@ -55,8 +57,33 @@ export default function Home() {
         ListHeaderComponent={
           <>
             {/* HEADER */}
-            <View style={styles.upperContainer}>
-              <Text style={styles.title}>Tara</Text>
+            <View className="flex-row m-5 justify-between">
+              <Image
+                source={require("@/assets/images/Placeholder/placeholder.png")}
+                className="w-12 h-12 rounded-full"
+                resizeMode="resize"
+              />
+              <TouchableOpacity 
+              className=" w-12 h-12  rounded-full items-center justify-center"
+              style={{ backgroundColor: `${Colors.button}20` }}
+              > 
+                <Ionicons name="notifications-outline" size={24} color={Colors.button} />
+              </TouchableOpacity>
+            </View>
+
+            <View className="mb-3 ml-5">
+              <Text className="text-3xl font-bold">Hey,{" "}
+                <Text 
+                className="text-3xl font-bold"
+                style={{color: Colors.button}}
+                >
+                  {user?.firstName && user?.lastName 
+                  ? `${user.firstName} ${user.lastName}` 
+                  : "User"}
+                  !
+                </Text>
+              </Text>
+              <Text className="text-1xl font-bold">Where will you go today?</Text>
             </View>
 
             {/* ROUTE INPUT */}
@@ -190,10 +217,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginTop: 5,
   },
-  upperContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
   searchContainer: {
     justifyContent: "center",
@@ -208,9 +231,8 @@ const styles = StyleSheet.create({
   },
   description: {
     fontFamily: "fontRegular",
-    fontSize: 16,
-    lineHeight: 20,
-    marginTop: 10,
+    fontSize: 12,
+    lineHeight: 15,
     textAlign: "left",
     paddingLeft: 20,
     color: Colors.gray

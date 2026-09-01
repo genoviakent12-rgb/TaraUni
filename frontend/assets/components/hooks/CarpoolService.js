@@ -1,7 +1,10 @@
-const API_URL = "http://localhost:8080/api";
+import {useAuth} from "@/context/AuthContext";
+
+const API_URL = "http://localhost:8080";
 
 // create carpool
 export const createCarpool = async (carpool) => {
+  
   try {
     const response = await fetch(`${API_URL}/carpools`, {
       method: "POST",
@@ -12,9 +15,9 @@ export const createCarpool = async (carpool) => {
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Failed to create carpool: ${response.status}`
-      );
+      const errorText = await response.text();
+      console.log("CREATE CARPOOL ERROR BODY: ", errorText);
+      throw new Error(`Failed to create carpool: ${response.status}`);
     }
 
     const data = await response.json();
@@ -84,9 +87,9 @@ export const joinCarpool = async (id) =>  {
 }
 
 //remove a carpool
-export const removeCarpool = async (carpools, currentUserId) =>  {
+export const removeCarpool = async (carpoolId, currentUserId) =>  {
   try { 
-    const response = await fetch(`${API_URL}/carpools/${carpools.id}?userId=${currentUserId}`, { 
+    const response = await fetch(`${API_URL}/carpools/${carpoolId}?userId=${currentUserId}`, { 
       method: "DELETE",
       headers: { 
         "Content-Type": "application/json"
