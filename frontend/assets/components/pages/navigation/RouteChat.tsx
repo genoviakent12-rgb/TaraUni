@@ -40,7 +40,7 @@ export default function RouteChat({ originData, destinationData }: Props) {
     setLoading(true);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const timeoutId = setTimeout(() => controller.abort(), 40000);
 
     try {
       const res = await fetch(BACKEND_URL, {

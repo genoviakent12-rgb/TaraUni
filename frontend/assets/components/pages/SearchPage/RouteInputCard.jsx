@@ -69,6 +69,7 @@ export default function RouteInputCard({
           placeholder={ORIGIN_PLACEHOLDER[index]}
           placeholderTextColor={Colors.text}
           fetchDetails={true}
+          numberOfLines={2}
           enablePoweredByContainer={false}
           keyboardShouldPersistTaps="handled"
           textInputProps={{
@@ -114,6 +115,7 @@ export default function RouteInputCard({
           placeholder={DESTINATION_PLACEHOLDER[index]}
           placeholderTextColor={Colors.text}
           fetchDetails={true}
+          numberOfLines={2}
           enablePoweredByContainer={false}
           keyboardShouldPersistTaps="handled"
           textInputProps={{

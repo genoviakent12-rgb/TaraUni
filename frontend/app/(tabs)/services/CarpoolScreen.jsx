@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from "react-native";
 
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
@@ -23,17 +23,17 @@ export default function Carpool() {
         <View style={styles.headerRight} />
       </View>
 
-      <View className="gap-4 mt-5 flex-row items-center justify-center">
+      <View className="gap-5 mt-5 flex-row items-center ml-5 ">
         <TouchableOpacity 
         style={{backgroundColor: Colors.lightGray}}
         className="px-5 h-12 rounded-full items-center justify-center">
-          <Text className="text-black font-medium">Nearest</Text>
+          <Text className="text-black font-medium">All</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
         style={{backgroundColor: Colors.lightGray}}
         className="px-5 h-12 rounded-full items-center justify-center">
-          <Text className="text-black font-medium">All</Text>
+          <Text className="text-black font-medium">Nearest</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
@@ -44,9 +44,9 @@ export default function Carpool() {
       </View>
 
       {/* Existing carpools */}
-      <View style={styles.carpoolsContainer}>
+      <ScrollView style={styles.carpoolsContainer}>
         <CarpoolsCreatedCard />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.surface,
+    paddingBottom: 50
   },
   header: {
     flexDirection: "row",
@@ -71,4 +72,7 @@ const styles = StyleSheet.create({
   headerRight: {
     width: 24,
   },
+  carpoolsContainer: {
+    marginTop: -50,
+  }
 });

@@ -41,7 +41,7 @@ export default function CarpoolsCreatedCard() {
     fetchUserCarpools();
   }, [user?.id]);
 
-  const deleteCarpool = async (carpoolId) => {
+  const handleDeleteCarpool = async (carpoolId) => {
     try {
       await removeCarpool(carpoolId);
       setCarpools(carpools.filter((carpool) => carpool.id !== carpoolId));
@@ -50,7 +50,7 @@ export default function CarpoolsCreatedCard() {
     }
   };
 
-  const joinCarpool = async (carpoolId) => {
+  const handleJoinCarpool = async (carpoolId) => {
     try {
       await joinCarpool(carpoolId);
       setCarpools(carpools.filter((carpool) => carpool.id !== carpoolId));
@@ -58,6 +58,28 @@ export default function CarpoolsCreatedCard() {
       console.error("Error joining carpool:", e);
     }
   };
+
+  // if ( user?.id === carpools?.user?.id ) { 
+  //   return ( 
+  //     <TouchableOpacity
+  //             className="absolute right-0 mr-0 rounded-lg px-5 py-2"
+  //             style={{ backgroundColor: Colors.button }}
+  //             onPress={() => joinCarpool(carpools.id)}
+  //           >
+  //             <Text className="text-white font-bold">Join</Text>
+  //           </TouchableOpacity>
+  //   )
+  // } else {
+  //   return ( 
+  //     <TouchableOpacity
+  //             className="absolute right-0 mr-0 rounded-lg px-5 py-2"
+  //             style={{ backgroundColor: Colors.button }}
+  //             onPress={() => deleteCarpool(carpools.id)}
+  //           >
+  //             <Text className="text-white font-bold">Delete</Text>
+  //           </TouchableOpacity>
+  //   )
+  // };
 
   if (carpools.length === 0) {
     return (
@@ -72,11 +94,12 @@ export default function CarpoolsCreatedCard() {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 ">
+      
       {carpools.map((carpool) => (
         <View
           key={carpool.id}
-          className="rounded-2xl p-5 px-5 py-5 h-[170px] w-[90%] justify-center self-center mt-4 overflow-hidden"
+          className="rounded-2xl p-5 px-5 py-5 h-[200px] w-[90%] justify-center self-center mt-10 overflow-hidden"
           style={{
             backgroundColor: Colors.background,
             borderColor: Colors.gray,
@@ -114,6 +137,7 @@ export default function CarpoolsCreatedCard() {
             <TouchableOpacity
               className="absolute right-0 mr-0 rounded-lg px-5 py-2"
               style={{ backgroundColor: Colors.button }}
+              onPress={() => joinCarpool(carpool.id)}
             >
               <Text className="text-white font-bold">Join</Text>
             </TouchableOpacity>
@@ -162,7 +186,7 @@ export default function CarpoolsCreatedCard() {
                 className="ml-4 text-base font-medium"
                 style={{ color: Colors.textSecondary }}
               >
-                AED {carpool.price}
+                AED {carpool.price} per person
               </Text>
             </View>
 
