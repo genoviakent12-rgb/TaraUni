@@ -23,9 +23,9 @@ TaraUni aims to address these challenges by providing a centralized platform whe
 
 ---
 
-# Application Screenshots - Documentation
+# Application Presentation - Documentation
 
-https://docs.google.com/document/d/1hWY4cykujLEIEq4gKx8ZRyDWc7g4vQOC3u3OvMgOL5o/edit?usp=sharing
+[https://docs.google.com/document/d/1hWY4cykujLEIEq4gKx8ZRyDWc7g4vQOC3u3OvMgOL5o/edit?usp=sharing](https://canva.link/h9xnmxtq2svx5wl)
 
 ---
 
